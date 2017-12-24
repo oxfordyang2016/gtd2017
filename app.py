@@ -191,7 +191,7 @@ def inbox():
     useremail = request.cookies.get('email')
     dbuser = User.query.filter_by(email=useremail).first()
     print(dbuser.cookie)
-    if checkcookie_time(request)>10:
+    if checkcookie_time(request)>360000:
         return redirect('/')
     #https://teamtreehouse.com/community/flask-redirect-vs-redirecturlfor
     if dbuser.cookie !=useremail:
