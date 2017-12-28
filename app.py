@@ -30,6 +30,8 @@ migrate = Migrate(app, db)
 
 #db migrate ,u will meet the problem  You did not provide the FLASK_APP environment variable.ref:https://www.pythonanywhere.com/forums/topic/11946/
 #https://stackoverflow.com/questions/32798937/cant-migrate-or-upgrade-database-with-flask-migrate-alembic
+#db migrate will meet the problem alembic util command error can't find identifier
+#https://stackoverflow.com/questions/32311366/alembic-util-command-error-cant-find-identifier
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
