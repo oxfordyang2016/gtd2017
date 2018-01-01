@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
+
+
+<!--https://vuejs.org/v2/examples/todomvc.html maybe a good link-->
 <head>
   <title>Bootstrap Example</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
     /* Remove the navbar's default margin-bottom and rounded borders */
@@ -79,132 +84,42 @@
   </div>
 </nav>
 <!--deal with user https://vuejs.org/v2/guide/-->
+<!--https://www.youtube.com/watch?v=DCwOPBxsXDs&list=PL4cUxeGkcC9gQcYgjhBoeQH7wiAyZNrYa&index=5-->
+
+
+
 <div id="example-1" class="container-fluid text-center">
-  <div class="row content">
-    <div class="col-sm-2 sidenav">
-    <!--event bind to method https://v1.vuejs.org/guide/events.html-->
-      <div id="example-2" class="btn-group">
-     <button  v-on:click="say('hi')">inbox</button>
-     <button>today</button>
-     <button>next7days</button>
-     <p>project</p>
-     <button>personal</button>
-     <button>reading list</button>
-     <button>homework</button>
+<div class="row content">
+  <div class="col-sm-2 sidenav">
+    <div id="example-2" class="btn-group">
+<!--<p>Message is: {{ messagev }}</p>-->
+<!--  u need to note that how it get task in content(use {{task}}) and tagname(use name) -->
+<button v-on:click="clicked(project)" v-for="project in projects">{{project}}</button>
+<button v-on:click="addproject" type="button" class="btn btn-default btn-sm">
+<span class="glyphicon glyphicon-plus"></span> add project
+</button>
+<!--deal with keyboard event-->
 
-
-    </div>
-    </div>
-    <div class="col-sm-8 text-left">
-      <h3>{{title}}</h3>
-      <div id="app">
-  {{ message }}
+<input v-if="display" v-on:keyup.enter="keyboardenterforaddproject"
+v-model="messagev" placeholder="edit me,enter">
 </div>
-   <ul id="exampler">
-    <li v-for="item in items">
-    {{ item.message }}
-   </li>
-   </ul>
-    </div>
-  </div>
+</div>
+<div class="col-sm-8 text-left">
+<p>{{clickedproject}}</p>
+<p v-for="item in allitems[clickedproject]">
+<button id="checkBox"  v-on:click='finished(item)'  type="checkbox">finish</button> {{item}}</p>
+<button v-on:click="additems" type="button"
+class="btn btn-default btn-sm">
+<span class="glyphicon glyphicon-plus"></span> add
+</button>
+<input v-if="displayforitem" v-on:keyup.enter="keyboardenterofadditem" v-model="messagev" placeholder="edit me,enter">
+</div>
+</div>
 </div>
 
-
-
-
-
-
-<script src="https://unpkg.com/vue"></script>
-<script>
-  new Vue({
-  el: '#app',
-  data: {
-    message: 'Hello Vue.js yangming is here u are ok!',
-    test:"u may love me "
-  }
-});
-var app2 = new Vue({
-  el: '#app-2',
-  data: {
-    message: 'You loaded this page on ' + new Date().toLocaleString()
-  }
-});
-
-var app3 = new Vue({
-  el: '#app-3',
-  data: {
-    seen: true
-  }
-})
-;
-var app4 = new Vue({
-  el: '#app-4',
-  data: {
-    todos: [
-      { text: 'Learn JavaScript' },
-      { text: 'Learn Vue' },
-      { text: 'Build something awesome' }
-    ]
-  }
-});
-
-
-
-new Vue({
-  el: '#example-2',
-  methods: {
-    say: function (msg) {
-      alert(msg)
-    }
-  }
-})
-var app5 = new Vue({
-  el: '#app-5',
-  data: {
-    message: 'Hello Vue.js!'
-  },
-  methods: {
-    reverseMessage: function () {
-      this.message = this.message.split('').reverse().join('')
-    }
-  }
-})
-
-Vue.component('todo-item', {
-  template: '<li>This is a todo</li>'
-})
-
-var example1 = new Vue({
-  el: '#example-1',
-  data: {
-    title:"title",
-    items: [
-      { message: 'Foo' },
-      { message: 'Bar' },
-      { message: 'Foo' },
-      { message: 'Bar' },
-      { message: 'Foo' },
-      { message: 'Bar' },
-      { message: 'Foo' },
-      { message: 'Bar' },
-      { message: 'Foo' },
-      { message: 'Bar' },
-    ]
-  },
-    methods: {
-    inobx: function (event) {
-      this.title="inbox"
-    }
-  }
-
-
-
-
-})
-
-
-
-</script>
+<script src="https://unpkg.com/vue@2.5.13/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="../static/js/vuelearn.js"></script>
 
 
 

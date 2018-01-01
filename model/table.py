@@ -1,4 +1,7 @@
 
+
+
+
 class task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(80))
