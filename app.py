@@ -1,5 +1,5 @@
 
-
+#https://stackoverflow.com/questions/213543/how-can-i-check-mysql-engine-type-for-a-specific-table
 #reference url https://scotch.io/tutorials/build-a-crud-web-app-with-python-and-flask-part-one
 #when u run app.py in macos ,u may meet the problem https://stackoverflow.com/questions/24001147/python-bind-socket-error-errno-13-permission-denied
 import os,time,json
@@ -10,6 +10,8 @@ from flask import Flask, request,jsonify,redirect, url_for
 from flask import render_template,make_response
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from cookieforgtd.cookie import checkcookie_time,checkcookie,getcookieinfo
 #in procfile to specify the python run the app
 #web: FLASK_APP = server.py python -m flask run --host=0.0.0.0 --port=$PORT
@@ -74,7 +76,7 @@ class task(db.Model):
         self.plantime = plantime
         self.finishtime = finishtime
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<Name %r>' % self.user
 
 
 
@@ -106,7 +108,7 @@ def usersystem():
 
 
 
-@app.route('/gtdcli',methods=['GET','POST'])
+@app.route('/gtdcli1',methods=['GET','POST'])
 def gtdcli():
     if checkcookie(request)== False:
         return json.dumps({'info':'please relogin!'})
@@ -138,6 +140,66 @@ def gtdcli():
     except Exception as e:
         print('error info',str(e))
         return json.dumps({'errorindo':str(e)})
+
+
+
+
+@app.route('/gtdcli',methods=['GET','POST'])
+def gtdcli1():
+    print(request)
+    print("================>>>>>>>>>>>>>>>>>>>>>>CLIENT<<<<<<<<<<<<<<<<<<===========")
+    if checkcookie(request)== False:
+        return json.dumps({'info':'please relogin!'})
+    email = getcookieinfo(request)[0]
+    try:
+        if request.method == 'POST':
+            #print(request.json)
+            body = request.get_json()
+            #body = request.json()
+            inboxthing1 =body['inbox']
+            now = datetime.now()
+            year,month,day = now.year,now.month,now.day
+            buildtime = str(year)+str(month)+str(day)
+            inboxthing = body['inbox']
+            taskstatus = body['task-status']
+            plantime = body['plantime']
+            project =  body['project']
+
+            print("i am print inbox",inboxthing)
+
+            try:
+                Session = sessionmaker()
+                engine = create_engine('mysql://dt_admin:dt2016@localhost/dreamteam_db')
+                Session.configure(bind=engine)
+                session = Session()
+                print("--------------it is buiding session--------------------------------")
+                taskcontent = task(inboxthing,buildtime,user=email,email=email,plantime=plantime,project=project)
+                session.add(taskcontent)
+                print("-----------------it is writiing data to database----------------")
+                session.commit()
+                session.flush()
+                session.close()
+                print("-----------------it is closing database--------------------------")
+                print("==================================CLIENT  END ==========================")
+                return json.dumps({'status':'u have uploaded successfully'})
+
+            except Exception as e :
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(exc_type, fname, exc_tb.tb_lineno)
+                print("erro=======>",e)
+                return json.dumps({'status':'db error'})
+        else:
+            return json.dumps({'status':'upload fail'})
+    except Exception as e:
+        print('error info',str(e))
+        return json.dumps({'errorindo':str(e)})
+
+
+
+
+
+
 
 
 @app.route('/today')
@@ -186,6 +248,7 @@ def update():
             target_task.status =taskstatus
             db.session.commit()
             db.session.close()
+
             return json.dumps({'status':'u have uploaded successfully'})
     except Exception as e:
         print(e)
@@ -207,8 +270,8 @@ def load():
 
 
 
-@app.route('/inbox')
-def inbox():
+@app.route('/inbox1')
+def inbox1():
     #i want to write it to a fcuntion!!!!
     #get cookie key and value
     useremail = request.cookies.get('email')
@@ -225,10 +288,59 @@ def inbox():
 
     for k in allinbox:
         print(k.task)
-    #db.session.commit()
+    #db.session.commit
+    db.session.flush()
     db.session.close()
+    #return json.dumps({'allinbox':allinbox})
+    #return render_template("inbox.html",my_list = allinbox)
+    #return render_template("inbox.html")
+
+
+
+@app.route('/inbox')
+def inbox():
+    print("===================================WEB FUCK ME=======================")
+    useremail = request.cookies.get('email')
+    Session = sessionmaker()
+    engine = create_engine('mysql://dt_admin:dt2016@localhost/dreamteam_db')
+    Session.configure(bind=engine)
+    session = Session()
+    dbuser = session.query(User).filter_by(email=useremail).first()
+    session.flush()
+    #i want to write it to a fcuntion!!!!
+    #get cookie key and value
+
+    #dbuser = User.query.filter_by(email=useremail).first()
+    #db.session.commit()
+    #db.session.close()
+    #print(dbuser.cookie)
+    if checkcookie_time(request)>360000:
+        return redirect('/')
+    #https://teamtreehouse.com/community/flask-redirect-vs-redirecturlfor
+    if dbuser.cookie !=useremail:
+        return redirect('/')
+    allinbox = session.query(task).filter_by(project='inbox').order_by(task.id).all()
+    print("+++++++++++++++++++i am debuging++++++++++++++++++++++++")
+    #print(allinbox)
+    print("------------------above inbox----------------------------------")
+    #allinbox = task.query.filter_by(project='inbox').order_by(task.id).all()
+
+    #for k in allinbox:
+        #print(k.task)
+    #db.session.commit()
+    #db.session.close()
+    session.flush()
+    session.close()
+    print("666666666666666666666666------WEB END-------------8888888888888888888")
     return render_template("inbox.html",my_list = allinbox)
     #return render_template("inbox.html")
+
+
+
+
+
+
+
 
 
 
