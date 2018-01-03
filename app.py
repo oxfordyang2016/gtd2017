@@ -234,6 +234,7 @@ def update():
             project = body['project']
             print("project is ---",project)
             plantime = body['plantime']
+            finishtime ="unfinished"
             if taskstatus == "finish":
                 now = datetime.now()
                 year,month,day = now.year,now.month,now.day
