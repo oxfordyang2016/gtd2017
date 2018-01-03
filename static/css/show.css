@@ -183,20 +183,18 @@ body .il { color: #666666 }                     /* Literal.Number.Integer.Long *
 .g23,.g24,.g15,.g37,.g41,.g42,.g3,.finish,.replace,.finish20160909{
 text-decoration: line-through;
 background: red;
-
-
+border: 2px solid #4CAF50;
 }
 
 .project{
 text-decoration: line-through;
 background: green;
-
-
+border: 2px solid #4CAF50;
 }
 
-
-
-
+.unfinished{
+border: 2px solid #4CAF50;
+}
 
 
 .giveup{

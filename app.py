@@ -242,11 +242,14 @@ def update():
             #database update instaruct
             target_task = task.query.filter_by(id=idcli).first()
             #if the updated id doesnot exsit.it will lead bug
-            target_task.project = project
+            if project!="inbox":
+                target_task.project = project
             print('i have there')
-            target_task.plantime = plantime
+            if plantime!="unspecified":
+                target_task.plantime = plantime
             target_task.finishtime = finishtime
-            target_task.status =taskstatus
+            if taskstatus!="unfinished":
+                target_task.status =taskstatus
             db.session.commit()
             db.session.close()
 
@@ -260,14 +263,14 @@ def update():
 
 
 
-
+'''
 @app.route('/load')
 def load():
     allinbox = task.query.order_by(task.id).all()
     for k in allinbox:
         print(k.task)
     return render_template("loadhtmlfromdb.html",my_list = allinbox)
-
+'''
 
 
 
@@ -320,7 +323,8 @@ def inbox():
     #https://teamtreehouse.com/community/flask-redirect-vs-redirecturlfor
     if dbuser.cookie !=useremail:
         return redirect('/')
-    allinbox = session.query(task).filter_by(project='inbox').order_by(task.id).all()
+    #many filter example
+    allinbox = session.query(task).filter_by(project='inbox',email=useremail).order_by(task.id).all()
     print("+++++++++++++++++++i am debuging++++++++++++++++++++++++")
     #print(allinbox)
     print("------------------above inbox----------------------------------")
@@ -336,40 +340,6 @@ def inbox():
     return render_template("inbox.html",my_list = allinbox)
     #return render_template("inbox.html")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@app.route('/everyday1')
-def everyday():
-    alltask = task.query.order_by(task.project).all()
-    #alltask = task.query.order_by(task.id).all()
-    plantime = list(set([task.plantime for task in alltask if task.plantime!="unspecified"]))
-    everyday = {}
-    for time in plantime:
-        everyday["time"]=[task for task in alltask if task.plantime==time]
-    return render_template('everyday1.html',everyday=everyday)
-
-
-
-
-
-
-
-
-@app.route('/in')
-def hello_world():
-    return render_template('in.html')
 
 
 @app.route('/todoist')
@@ -390,7 +360,8 @@ def everydayfordb():
         everyday["time"]=[task for task in alltask if task.plantime==time]
     return render_template('everyday1.html',everyday=everyday)
     '''
-    alltask = task.query.order_by(task.id).all()
+    useremail = request.cookies.get('email')
+    alltask = task.query.filter_by(email=useremail).order_by(task.id).all()
     #http://flask-sqlalchemy.pocoo.org/2.3/queries/
     plantime =list(set([k.plantime for  k in alltask if k.plantime!="unspecified"]))
     everyday = {}
@@ -406,7 +377,8 @@ def all():
 
 @app.route('/project')
 def project():
-    allproject = task.query.order_by(task.project).all()
+    useremail = request.cookies.get('email')
+    allproject = task.query.filter_by(email=useremail).order_by(task.project).all()
     #http://flask-sqlalchemy.pocoo.org/2.3/queries/
     project_name =list(set([k.project for  k in allproject if k.project!="inbox"]))
     project_dict = {}
@@ -603,36 +575,14 @@ def cookie():
     resp = make_response(render_template('inbox.html'))
     resp.set_cookie('username', 'theusername')
     resp.set_cookie('email', 'yangming')
-
     return resp
 
 
 
 
-
-
-@app.route('/test')
-def info1():
-
-    a={'test':'yangming is hereko','time':str(time.time())}
-
-    return json.dumps(a)
-
-
 @app.route('/mainboard')
 def mainboard():
     return render_template('layout.html')
-
-
-
-@app.route('/testpost')
-def info2():
-
-    a={'test':'++++++++++++','time':str(time.time())}
-
-    return json.dumps(a)
-
-
 
 
 
