@@ -231,6 +231,7 @@ def update():
             body = request.get_json()
             taskstatus = body['taskstatus']
             idcli = body['id']
+            inbox =body['inbox']
             project = body['project']
             print("project is ---",project)
             plantime = body['plantime']
@@ -245,7 +246,7 @@ def update():
             if project!="inbox":
                 target_task.project = project
             if inbox!="nocontent":
-                target_task.task = inbox    
+                target_task.task = inbox
             print('i have there')
             if plantime!="unspecified":
                 target_task.plantime = plantime
