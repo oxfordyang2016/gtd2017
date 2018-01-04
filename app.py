@@ -245,7 +245,7 @@ def update():
             if project!="inbox":
                 target_task.project = project
             if inbox!="nocontent":
-                target_task.inbox = inbox    
+                target_task.task = inbox    
             print('i have there')
             if plantime!="unspecified":
                 target_task.plantime = plantime
