@@ -232,6 +232,9 @@ def update():
             taskstatus = body['taskstatus']
             idcli = body['id']
             inbox =body['inbox']
+            print("--------uploading-------------")
+            print(inbox)
+            print("----------end-----------------")
             project = body['project']
             print("project is ---",project)
             plantime = body['plantime']
