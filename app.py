@@ -173,7 +173,7 @@ def gtdcli1():
                 Session.configure(bind=engine)
                 session = Session()
                 print("--------------it is buiding session--------------------------------")
-                taskcontent = task(inboxthing,buildtime,user=email,email=email,plantime=plantime,project=project)
+                taskcontent = task(inboxthing,buildtime,status=taskstatus,user=email,email=email,plantime=plantime,project=project)
                 session.add(taskcontent)
                 print("-----------------it is writiing data to database----------------")
                 session.commit()
