@@ -244,6 +244,8 @@ def update():
             #if the updated id doesnot exsit.it will lead bug
             if project!="inbox":
                 target_task.project = project
+            if inbox!="nocontent":
+                target_task.inbox = inbox    
             print('i have there')
             if plantime!="unspecified":
                 target_task.plantime = plantime
