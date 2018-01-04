@@ -530,8 +530,16 @@ def login():
     email=request.form['email']
     password=request.form['password']
     user = User.query.filter_by(email=email).first()
+    #https://stackoverflow.com/questions/8949252/python-attribute-error-nonetype-object-has-no-attribute-something
+    #deal with the bug  'NoneType' object has no attribute 'something'
+
+    if user == None:
+        logininfo = "the user doesnot exist"
+        print(logininfo)
     if user.password == password:
         logininfo = "login successfully"
+    else:
+        print("password is wrong!!!")
     #resp = make_response(render_template('inbox.html'))
     #url redirect https://stackoverflow.com/questions/14343812/redirecting-to-url-in-flask
     resp = make_response(redirect('/inbox'))
